@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.playedSquares = exports.squares = exports.sizeKey = exports.fromDoubled = exports.toDoubled = exports.terrainLetters = void 0;
+exports.playedSquares = exports.squares = exports.fromDoubled = exports.toDoubled = exports.terrainLetters = void 0;
 /** The terrain letters, by the original's terrain number: 0 is Desert, 10 is Ocean. */
 exports.terrainLetters = 'DPGFHMTISJO';
 /**
@@ -13,14 +13,14 @@ const toDoubled = ({ x, y }) => ({
     y,
 });
 exports.toDoubled = toDoubled;
-/** Our square at Civilization II's doubled (`x`, `y`): `x` and `y` both even or both odd. */
-const fromDoubled = ({ x, y }) => ({
-    x: x >> 1,
-    y,
-});
+/** Our square at Civilization II's doubled (`x`, `y`), which are both even or both odd: a `RangeError` otherwise. */
+const fromDoubled = ({ x, y }) => {
+    if (((x + y) & 1) !== 0) {
+        throw new RangeError(`fromDoubled: (${x}, ${y}) is between two squares: a doubled x and its row are both even or both odd.`);
+    }
+    return { x: x >> 1, y };
+};
 exports.fromDoubled = fromDoubled;
-const sizeKey = (width, height) => `${width}x${height}`;
-exports.sizeKey = sizeKey;
 /** The map's squares as the original's file has them, row by row: each one's terrain letter, in upper case, and whether a
  *  river runs through it. */
 const squares = (map) => Array.from(map.terrain.replace(/\n/g, ''), (letter) => ({

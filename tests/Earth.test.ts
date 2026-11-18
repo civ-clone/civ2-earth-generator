@@ -6,7 +6,7 @@ import EarthMap, {
   toDoubled,
 } from '../EarthMap';
 import { earthMaps, findEarthMap, getEarthMap } from '../EarthMaps';
-import { startTileFor, startTileOn, startTilesOn } from '../startTiles';
+import { startTileOn, startTilesOn } from '../startTiles';
 import Civilization from '@civ-clone/core-civilization/Civilization';
 import Earth from '../Earth';
 import { Glacier } from '@civ-clone/base-terrain-glacier/Glacier';
@@ -99,6 +99,11 @@ describe('toDoubled and fromDoubled', (): void => {
       ],
     ]);
   });
+
+  it('refuses a doubled x and row that are between two squares', (): void => {
+    expect(() => fromDoubled({ x: 3, y: 2 })).throw(RangeError);
+    expect(() => fromDoubled({ x: 2, y: 1 })).throw(RangeError);
+  });
 });
 
 describe('getEarthMap', (): void => {
@@ -184,19 +189,52 @@ describe('Earth', (): void => {
   });
 });
 
-describe('startTileFor', (): void => {
-  it("is the map's own start for a tribe, or one that extends it, and none off the maps", (): void => {
+describe('startTileOn', (): void => {
+  it("is the map's own start for a tribe, or one that extends it, or none", (): void => {
     class Latin extends Roman {}
 
     const map = earthMaps[1]!,
       [, rome] = map.startTiles.find(([TribeType]) => TribeType === Roman)!;
 
-    expect(startTileFor(Roman, 50, 80)).eql(rome);
-    expect(startTileFor(Latin, 50, 80)).eql(rome);
-    expect(startTileFor(class Other extends Civilization {}, 50, 80)).null;
-    expect(startTileFor(Roman, 80, 50)).null;
-    expect(startTilesOn(50, 80).length).equal(map.startTiles.length);
-    expect(startTilesOn(80, 50)).eql([]);
+    expect(startTileOn(map, Roman)).eql(rome);
+    expect(startTileOn(map, Latin)).eql(rome);
+    expect(startTileOn(map, class Other extends Civilization {})).null;
+    expect(startTilesOn(map).length).equal(map.startTiles.length);
+    // The map Earth made for a size it has no map for: the Normal map's starts.
     expect(startTileOn(new Earth(64, 64).map(), Roman)).eql(rome);
+  });
+
+  it("pins a known start on each map: Rome's, on land", (): void => {
+    earthMaps.forEach((map) => {
+      const start = startTileOn(map, Roman)!;
+
+      expect(start).not.null;
+      expect('O').not.equal(at(map, start.x, start.y).letter);
+    });
+  });
+});
+
+describe('index', (): void => {
+  it('exports what a ruleset needs', (): void => {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const exported = Object.keys(require('../index')).sort();
+
+    expect(exported).eql(
+      [
+        'Earth',
+        'earthMaps',
+        'findEarthMap',
+        'fromDoubled',
+        'getEarthMap',
+        'playedSquares',
+        'squares',
+        'startTileOn',
+        'startTilesOn',
+        'terrainLetters',
+        'terrainTypes',
+        'toDoubled',
+        'tribes',
+      ].sort()
+    );
   });
 });

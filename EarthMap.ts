@@ -36,14 +36,16 @@ export const toDoubled = ({ x, y }: Coordinates): Coordinates => ({
   y,
 });
 
-/** Our square at Civilization II's doubled (`x`, `y`): `x` and `y` both even or both odd. */
-export const fromDoubled = ({ x, y }: Coordinates): Coordinates => ({
-  x: x >> 1,
-  y,
-});
+/** Our square at Civilization II's doubled (`x`, `y`), which are both even or both odd: a `RangeError` otherwise. */
+export const fromDoubled = ({ x, y }: Coordinates): Coordinates => {
+  if (((x + y) & 1) !== 0) {
+    throw new RangeError(
+      `fromDoubled: (${x}, ${y}) is between two squares: a doubled x and its row are both even or both odd.`
+    );
+  }
 
-export const sizeKey = (width: number, height: number): string =>
-  `${width}x${height}`;
+  return { x: x >> 1, y };
+};
 
 export type Square = { letter: string; river: boolean };
 

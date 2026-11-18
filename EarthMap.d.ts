@@ -31,9 +31,8 @@ export declare const terrainLetters = 'DPGFHMTISJO';
  *  `tile_grassland_has_shield`) take these.
  */
 export declare const toDoubled: ({ x, y }: Coordinates) => Coordinates;
-/** Our square at Civilization II's doubled (`x`, `y`): `x` and `y` both even or both odd. */
+/** Our square at Civilization II's doubled (`x`, `y`), which are both even or both odd: a `RangeError` otherwise. */
 export declare const fromDoubled: ({ x, y }: Coordinates) => Coordinates;
-export declare const sizeKey: (width: number, height: number) => string;
 export type Square = {
   letter: string;
   river: boolean;
