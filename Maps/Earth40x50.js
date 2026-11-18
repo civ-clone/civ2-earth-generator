@@ -3,8 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.earth40x50 = void 0;
 const tribes_1 = require("../tribes");
 // Civilization II's own Earth, 40 squares across and 50 down: generated from the original's `WORLD_S.MP` by
-//  `npm run generate` (tools/generate.ts). The terrain, rivers, seed and start positions are the map's own; the
-//  specials, huts and grassland shields come from the seed, as civ2-world places them.
+//  `npm run generate` (tools/generate.ts). The terrain, rivers, seed and start positions are the map's own. A game makes
+//  the first and last rows Glacier (`playedSquares`), and places the specials, huts and Grassland shields from the seed,
+//  hiding the specials of ocean squares far from land, as civ2-world does.
 exports.earth40x50 = {
     width: 40,
     height: 50,

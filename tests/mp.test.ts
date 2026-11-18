@@ -4,8 +4,9 @@ import readMap, {
   STARTS_SIZE,
   TRIBES,
 } from '../lib/mp';
+import StaggeredIsoTopology from '@civ-clone/core-world/StaggeredIsoTopology';
 import { expect } from 'chai';
-import { terrainText } from '../lib/earthMapSource';
+import { earthMapSource, terrainText } from '../lib/earthMapSource';
 
 // A map file made up here, 2 squares across (4 doubled) and 2 rows down, as the original writes one.
 const mapFile = (
@@ -60,6 +61,39 @@ describe('readMap', (): void => {
     ]);
     expect(map.starts.length).equal(TRIBES);
     expect(terrainText(map)).equal('Og\nFi\n');
+  });
+
+  it("can't be an Earth map when it's flat, or marks a square to have no special", (): void => {
+    expect(() =>
+      earthMapSource(readMap(mapFile([10, 10, 10, 10], { flat: 1 })), 'FLAT.MP')
+    ).throw(TypeError);
+    expect(() =>
+      earthMapSource(readMap(mapFile([10, 0x40 | 10, 10, 10])), 'MARKED.MP')
+    ).throw(TypeError);
+  });
+
+  it("puts a square at doubled x X on an odd row where the staggered grid's odd rows are, half a square right", (): void => {
+    // 3 squares across (6 doubled) and 2 rows: on row 1 the doubled x are 1, 3 and 5.
+    const map = readMap(
+        mapFile([10, 10, 10, 10, 10, 10], { doubledWidth: 6, area: 6 }, [
+          [3, 1],
+          [2, 0],
+          [4, 0],
+        ])
+      ),
+      topology = new StaggeredIsoTopology(3, 2),
+      [start, northWest, northEast] = map.starts as { x: number; y: number }[];
+
+    // Civ2's (3, 1) has (2, 0) to its north-west and (4, 0) to its north-east.
+    expect(start).eql({ x: 1, y: 1 });
+    expect(topology.neighbour(start!.x, start!.y, 'nw')).eql([
+      northWest!.x,
+      northWest!.y,
+    ]);
+    expect(topology.neighbour(start!.x, start!.y, 'ne')).eql([
+      northEast!.x,
+      northEast!.y,
+    ]);
   });
 
   it('reads a flat world', (): void => {

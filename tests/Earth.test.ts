@@ -1,10 +1,10 @@
-import EarthMap, { squares, terrainLetters } from '../EarthMap';
+import EarthMap, { playedSquares, squares, terrainLetters } from '../EarthMap';
 import { earthMaps, findEarthMap, getEarthMap } from '../EarthMaps';
 import { startTileFor, startTilesOn } from '../startTiles';
 import Civilization from '@civ-clone/core-civilization/Civilization';
 import Earth from '../Earth';
 import { Glacier } from '@civ-clone/base-terrain-glacier/Glacier';
-import { Ocean } from '@civ-clone/base-terrain-ocean/Ocean';
+import SquareTopology from '@civ-clone/core-world/SquareTopology';
 import { Roman } from '@civ-clone/base-civilization-roman/Roman';
 import { expect } from 'chai';
 import tribes from '../tribes';
@@ -83,10 +83,8 @@ describe('Earth', (): void => {
     expect(earth.topology().constructor.name).equal('StaggeredIsoTopology');
     expect(earth.map()).equal(map);
     expect(terrains.length).equal(2000);
-    expect(terrains[0]).instanceOf(
-      squares(map)[0]!.letter === 'I' ? Glacier : Ocean
-    );
-    squares(map).forEach(({ letter }, index) =>
+    expect(terrains[0]).instanceOf(Glacier);
+    playedSquares(map).forEach(({ letter }, index) =>
       expect(terrains[index]!.constructor.name).equal(
         [
           'Desert',
@@ -103,6 +101,37 @@ describe('Earth', (): void => {
         ][terrainLetters.indexOf(letter)]
       )
     );
+  });
+
+  it('makes the first and last rows Glacier, with no river, as the original does on a round world, and leaves the rest as the map has it', async (): Promise<void> => {
+    for (const map of earthMaps) {
+      const earth = new Earth(map.height, map.width),
+        terrains = await earth.generate(),
+        polar = (index: number) =>
+          index < map.width || index >= map.width * (map.height - 1);
+
+      expect(
+        terrains
+          .filter((terrain, index) => polar(index))
+          .every((terrain) => terrain instanceof Glacier)
+      ).true;
+      expect(
+        playedSquares(map).filter(
+          (square, index) => polar(index) && square.river
+        )
+      ).eql([]);
+      expect(playedSquares(map).filter((square, index) => !polar(index))).eql(
+        squares(map).filter((square, index) => !polar(index))
+      );
+    }
+  });
+
+  it('is on the staggered isometric grid whatever grid it is given', (): void => {
+    const square = new SquareTopology(40, 50),
+      earth = new Earth(50, 40, { topology: square, topologyId: 'square' });
+
+    expect(earth.topology()).not.equal(square);
+    expect(earth.topology().constructor.name).equal('StaggeredIsoTopology');
   });
 
   it('is the Normal map, 50 × 80, by default or for a size there is no map for', (): void => {

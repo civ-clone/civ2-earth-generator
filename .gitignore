@@ -215,3 +215,7 @@ tools/earth-maps/land.bin
 tools/earth-maps/lattice-*.pkl
 tools/earth-maps/preview.png
 __pycache__/
+
+# The original's map files are never part of this package: only what is derived from them.
+*.MP
+*.mp

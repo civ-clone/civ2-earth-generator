@@ -20,9 +20,17 @@ export interface EarthMap {
 /** The terrain letters, by the original's terrain number: 0 is Desert, 10 is Ocean. */
 export declare const terrainLetters = 'DPGFHMTISJO';
 export declare const sizeKey: (width: number, height: number) => string;
-/** The map's squares, row by row: each one's terrain letter, in upper case, and whether a river runs through it. */
-export declare const squares: (map: EarthMap) => {
+export type Square = {
   letter: string;
   river: boolean;
-}[];
+};
+/** The map's squares as the original's file has them, row by row: each one's terrain letter, in upper case, and whether a
+ *  river runs through it. */
+export declare const squares: (map: EarthMap) => Square[];
+/**
+ * The map's squares as a game is played on them: as the file has them, but with the first and last rows Glacier, with
+ *  no river, as the original makes them for every game on a round world (`mapgen_place_polar_caps`, which `map_generate`
+ *  runs on a map loaded from a file too).
+ */
+export declare const playedSquares: (map: EarthMap) => Square[];
 export default EarthMap;

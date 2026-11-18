@@ -15,8 +15,23 @@ export const terrainText = ({ width, terrain, rivers }: MapFile): string =>
     })
     .join('');
 
-/** The TypeScript of `Maps/Earth<width>x<height>.ts`, from `map`, read from the original's `file`. */
+/**
+ * The TypeScript of `Maps/Earth<width>x<height>.ts`, from `map`, read from the original's `file`. A flat world, or a
+ *  square marked to have no special, isn't something an `EarthMap` can say, so either is refused rather than lost.
+ */
 export const earthMapSource = (map: MapFile, file: string): string => {
+  if (map.flat) {
+    throw new TypeError(
+      `earthMapSource: ${file} is a flat world, which an EarthMap can't be.`
+    );
+  }
+
+  if (map.noSpecial.some((marked) => marked)) {
+    throw new TypeError(
+      `earthMapSource: ${file} marks squares to have no special, which an EarthMap can't say.`
+    );
+  }
+
   const name = `earth${map.width}x${map.height}`,
     starts = map.starts
       .map((start, tribe) =>
@@ -34,8 +49,9 @@ import tribes from '../tribes';
 // Civilization II's own Earth, ${map.width} squares across and ${
     map.height
   } down: generated from the original's \`${file}\` by
-//  \`npm run generate\` (tools/generate.ts). The terrain, rivers, seed and start positions are the map's own; the
-//  specials, huts and grassland shields come from the seed, as civ2-world places them.
+//  \`npm run generate\` (tools/generate.ts). The terrain, rivers, seed and start positions are the map's own. A game makes
+//  the first and last rows Glacier (\`playedSquares\`), and places the specials, huts and Grassland shields from the seed,
+//  hiding the specials of ocean squares far from land, as civ2-world does.
 export const ${name}: EarthMap = {
   width: ${map.width},
   height: ${map.height},

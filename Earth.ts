@@ -1,5 +1,5 @@
 import { Desert } from '@civ-clone/base-terrain-desert/Desert';
-import EarthMap, { squares, terrainLetters } from './EarthMap';
+import EarthMap, { playedSquares, terrainLetters } from './EarthMap';
 import { Forest } from '@civ-clone/base-terrain-forest/Forest';
 import Generator from '@civ-clone/core-world-generator/Generator';
 import { Glacier } from '@civ-clone/base-terrain-glacier/Glacier';
@@ -30,9 +30,10 @@ export const terrainTypes: (typeof Terrain)[] = [
 ];
 
 /**
- * Civilization II's Earth, on the staggered isometric grid, in each size `earthMaps` has. A size without a map of its
- *  own gets the Normal map, 50 × 80, so `width()` and `height()` report the size actually generated. The rivers, the map's
- *  seed and where each civilization starts are the map's (`map()`), for the rules to place.
+ * Civilization II's Earth, on the staggered isometric grid, in each size `earthMaps` has, with its polar rows Glacier
+ *  (`playedSquares`). A size without a map of its own gets the Normal map, 50 × 80, so `width()` and `height()` report
+ *  the size actually generated. The rivers, the map's seed and where each civilization starts are the map's (`map()`),
+ *  for the rules to place.
  */
 export class Earth extends Generator {
   private _map: EarthMap;
@@ -44,8 +45,11 @@ export class Earth extends Generator {
   ) {
     const map = getEarthMap(width, height);
 
+    // Always the staggered isometric grid: a grid given (`topology`) or named (`topologyId`) is left out.
+    const { topology, ...rest } = options;
+
     super(map.height, map.width, {
-      ...options,
+      ...rest,
       topologyId: 'staggered-iso',
     });
 
@@ -53,7 +57,7 @@ export class Earth extends Generator {
   }
 
   async generate(): Promise<Terrain[]> {
-    return squares(this._map).map(
+    return playedSquares(this._map).map(
       ({ letter }) => new terrainTypes[terrainLetters.indexOf(letter)]!()
     );
   }

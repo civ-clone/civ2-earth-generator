@@ -2,12 +2,14 @@
 
 Civilization II's own Earth, as a world `Generator`, on the staggered isometric grid: the twin of civ1-earth-generator.
 
-- `Earth`: the generator, in Civilization II's three sizes, Small (40 × 50), Normal (50 × 80) and Large (75 × 120). A size
-  without a map of its own gets the Normal map, so `width()` and `height()` say what was made. `map()` is the map it
-  made.
+- `Earth`: the generator, in Civilization II's three sizes, Small (40 × 50), Normal (50 × 80) and Large (75 × 120),
+  always on the staggered isometric grid. A size without a map of its own gets the Normal map, so `width()` and
+  `height()` say what was made. `map()` is the map it made.
 - `Maps/`: each size's terrain, rivers, seed and start positions, as code (`EarthMap`). The terrain is one letter per
-  square, in lower case where a river runs. Specials, huts and Grassland shields aren't stored in the original's maps:
-  the original places them from the seed and each square's position, and so does civ2-world.
+  square, in lower case where a river runs, as the original's file has it. A game is played on `playedSquares(map)`:
+  the same, with the first and last rows Glacier, as the original makes them on a round world. Specials, huts and
+  Grassland shields aren't stored in the original's maps: the original places them from the seed and each square's
+  position, and hides the specials of ocean squares with no land in a city's reach, and so does civ2-world.
 - `startTileFor(CivilizationType, width, height)`: where a tribe starts on the Earth map that size, as the original's
   map has it, or `null`. Not every tribe has a start on every map (the Small map has 19 of the 21).
 

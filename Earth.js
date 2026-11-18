@@ -30,21 +30,24 @@ exports.terrainTypes = [
     Ocean_1.Ocean,
 ];
 /**
- * Civilization II's Earth, on the staggered isometric grid, in each size `earthMaps` has. A size without a map of its
- *  own gets the Normal map, 50 × 80, so `width()` and `height()` report the size actually generated. The rivers, the map's
- *  seed and where each civilization starts are the map's (`map()`), for the rules to place.
+ * Civilization II's Earth, on the staggered isometric grid, in each size `earthMaps` has, with its polar rows Glacier
+ *  (`playedSquares`). A size without a map of its own gets the Normal map, 50 × 80, so `width()` and `height()` report
+ *  the size actually generated. The rivers, the map's seed and where each civilization starts are the map's (`map()`),
+ *  for the rules to place.
  */
 class Earth extends Generator_1.default {
     constructor(height = 80, width = 50, options = {}) {
         const map = (0, EarthMaps_1.getEarthMap)(width, height);
+        // Always the staggered isometric grid: a grid given (`topology`) or named (`topologyId`) is left out.
+        const { topology, ...rest } = options;
         super(map.height, map.width, {
-            ...options,
+            ...rest,
             topologyId: 'staggered-iso',
         });
         this._map = map;
     }
     async generate() {
-        return (0, EarthMap_1.squares)(this._map).map(({ letter }) => new exports.terrainTypes[EarthMap_1.terrainLetters.indexOf(letter)]());
+        return (0, EarthMap_1.playedSquares)(this._map).map(({ letter }) => new exports.terrainTypes[EarthMap_1.terrainLetters.indexOf(letter)]());
     }
     map() {
         return this._map;

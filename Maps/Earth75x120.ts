@@ -2,8 +2,9 @@ import EarthMap from '../EarthMap';
 import tribes from '../tribes';
 
 // Civilization II's own Earth, 75 squares across and 120 down: generated from the original's `WORLD.MP` by
-//  `npm run generate` (tools/generate.ts). The terrain, rivers, seed and start positions are the map's own; the
-//  specials, huts and grassland shields come from the seed, as civ2-world places them.
+//  `npm run generate` (tools/generate.ts). The terrain, rivers, seed and start positions are the map's own. A game makes
+//  the first and last rows Glacier (`playedSquares`), and places the specials, huts and Grassland shields from the seed,
+//  hiding the specials of ocean squares far from land, as civ2-world does.
 export const earth75x120: EarthMap = {
   width: 75,
   height: 120,
