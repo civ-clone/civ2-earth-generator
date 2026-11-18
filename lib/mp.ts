@@ -12,6 +12,8 @@
 // A square at doubled x `X` and row `y` is `X / 2` (rounded down) across on the staggered isometric grid, whose odd
 //  rows are shifted half a square right as Civilization II's are: `X` and `y` are both even or both odd.
 
+import { fromDoubled } from '../EarthMap';
+
 export const HEADER_SIZE = 14;
 export const TRIBES = 21;
 export const STARTS_SIZE = TRIBES * 2 * 2;
@@ -117,7 +119,7 @@ export const readMap = (data: Uint8Array): MapFile => {
         );
       }
 
-      return { x: x >> 1, y };
+      return fromDoubled({ x, y });
     }),
   };
 };

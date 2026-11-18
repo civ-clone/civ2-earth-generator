@@ -1,9 +1,17 @@
-import { Coordinates } from './EarthMap';
+import EarthMap, { Coordinates } from './EarthMap';
 import Civilization from '@civ-clone/core-civilization/Civilization';
 /**
+ * Where `CivilizationType` starts on `map`: the map's own start for it, or `null` when it has none. A civilization that
+ *  extends one of Civilization II's tribes starts where that tribe does.
+ */
+export declare const startTileOn: (
+  map: EarthMap,
+  CivilizationType: typeof Civilization
+) => Coordinates | null;
+/**
  * Where `CivilizationType` starts on the Earth map `width` by `height`: the map's own start for it, or `null` when the
- *  map has none for it, or there's no Earth map that size. A civilization that extends one of Civilization II's tribes
- *  starts where that tribe does.
+ *  map has none for it, or there's no Earth map that size (where `Earth` would make the Normal map: `startTileOn` takes
+ *  the map it made).
  */
 export declare const startTileFor: (
   CivilizationType: typeof Civilization,

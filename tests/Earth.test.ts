@@ -1,6 +1,12 @@
-import EarthMap, { playedSquares, squares, terrainLetters } from '../EarthMap';
+import EarthMap, {
+  fromDoubled,
+  playedSquares,
+  squares,
+  terrainLetters,
+  toDoubled,
+} from '../EarthMap';
 import { earthMaps, findEarthMap, getEarthMap } from '../EarthMaps';
-import { startTileFor, startTilesOn } from '../startTiles';
+import { startTileFor, startTileOn, startTilesOn } from '../startTiles';
 import Civilization from '@civ-clone/core-civilization/Civilization';
 import Earth from '../Earth';
 import { Glacier } from '@civ-clone/base-terrain-glacier/Glacier';
@@ -57,10 +63,41 @@ describe('Earth maps', (): void => {
       tribesStarting.forEach((TribeType) => expect(tribes).include(TribeType));
       map.startTiles.forEach(([, { x, y }]) => {
         expect(x).within(0, map.width - 1);
-        expect(y).within(0, map.height - 1);
+        // Never on a polar row, which a game makes Glacier.
+        expect(y).within(1, map.height - 2);
         expect(at(map, x, y).letter).not.equal('O');
       });
     });
+  });
+});
+
+describe('toDoubled and fromDoubled', (): void => {
+  it("are Civilization II's doubled x, odd on an odd row, and back", (): void => {
+    expect(
+      [
+        { x: 0, y: 0 },
+        { x: 0, y: 1 },
+        { x: 3, y: 2 },
+        { x: 3, y: 7 },
+      ].map((square) => [toDoubled(square), fromDoubled(toDoubled(square))])
+    ).eql([
+      [
+        { x: 0, y: 0 },
+        { x: 0, y: 0 },
+      ],
+      [
+        { x: 1, y: 1 },
+        { x: 0, y: 1 },
+      ],
+      [
+        { x: 6, y: 2 },
+        { x: 3, y: 2 },
+      ],
+      [
+        { x: 7, y: 7 },
+        { x: 3, y: 7 },
+      ],
+    ]);
   });
 });
 
@@ -160,5 +197,6 @@ describe('startTileFor', (): void => {
     expect(startTileFor(Roman, 80, 50)).null;
     expect(startTilesOn(50, 80).length).equal(map.startTiles.length);
     expect(startTilesOn(80, 50)).eql([]);
+    expect(startTileOn(new Earth(64, 64).map(), Roman)).eql(rome);
   });
 });

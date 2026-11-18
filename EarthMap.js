@@ -1,8 +1,24 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.playedSquares = exports.squares = exports.sizeKey = exports.terrainLetters = void 0;
+exports.playedSquares = exports.squares = exports.sizeKey = exports.fromDoubled = exports.toDoubled = exports.terrainLetters = void 0;
 /** The terrain letters, by the original's terrain number: 0 is Desert, 10 is Ocean. */
 exports.terrainLetters = 'DPGFHMTISJO';
+/**
+ * Where our square (`x`, `y`) is in Civilization II's own coordinates, whose x is doubled: two per square across, odd
+ *  on an odd row. The original's formulas for specials, huts and Grassland shields (`tile_resource`, `tile_has_hut`,
+ *  `tile_grassland_has_shield`) take these.
+ */
+const toDoubled = ({ x, y }) => ({
+    x: x * 2 + (y & 1),
+    y,
+});
+exports.toDoubled = toDoubled;
+/** Our square at Civilization II's doubled (`x`, `y`): `x` and `y` both even or both odd. */
+const fromDoubled = ({ x, y }) => ({
+    x: x >> 1,
+    y,
+});
+exports.fromDoubled = fromDoubled;
 const sizeKey = (width, height) => `${width}x${height}`;
 exports.sizeKey = sizeKey;
 /** The map's squares as the original's file has them, row by row: each one's terrain letter, in upper case, and whether a
