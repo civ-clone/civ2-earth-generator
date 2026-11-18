@@ -9,11 +9,12 @@ const startTileOn = (map, CivilizationType) => {
     var _a;
     const [, coordinates] = (_a = map.startTiles.find(([TribeType]) => CivilizationType === TribeType ||
         CivilizationType.prototype instanceof TribeType)) !== null && _a !== void 0 ? _a : [];
-    return coordinates !== null && coordinates !== void 0 ? coordinates : null;
+    // A copy: the map's own is every game's.
+    return coordinates === undefined ? null : { ...coordinates };
 };
 exports.startTileOn = startTileOn;
 /** Every start on `map`, whoever's. */
-const startTilesOn = (map) => map.startTiles.map(([, coordinates]) => coordinates);
+const startTilesOn = (map) => map.startTiles.map(([, coordinates]) => ({ ...coordinates }));
 exports.startTilesOn = startTilesOn;
 exports.default = exports.startTileOn;
 //# sourceMappingURL=startTiles.js.map

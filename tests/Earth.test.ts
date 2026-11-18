@@ -204,6 +204,28 @@ describe('startTileOn', (): void => {
     expect(startTileOn(new Earth(64, 64).map(), Roman)).eql(rome);
   });
 
+  it('pins each map: its seed, and the tribes without a start', (): void => {
+    expect(earthMaps.map(({ seed }) => seed)).eql([40, 33, 33]);
+    expect(
+      earthMaps.map((map) =>
+        tribes
+          .filter((TribeType) => startTileOn(map, TribeType) === null)
+          .map(({ name }) => name)
+      )
+    ).eql([['Mongol', 'Celtic'], [], []]);
+  });
+
+  it('hands out copies of the starts', (): void => {
+    const map = earthMaps[1]!,
+      start = startTileOn(map, Roman)!;
+
+    start.x += 1;
+    startTilesOn(map)[0]!.y += 1;
+
+    expect(startTileOn(map, Roman)).not.eql(start);
+    expect(startTilesOn(map)[0]).eql(map.startTiles[0]![1]);
+  });
+
   it("pins a known start on each map: Rome's, on land", (): void => {
     earthMaps.forEach((map) => {
       const start = startTileOn(map, Roman)!;

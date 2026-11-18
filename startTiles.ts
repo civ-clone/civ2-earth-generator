@@ -16,11 +16,12 @@ export const startTileOn = (
         CivilizationType.prototype instanceof TribeType
     ) ?? [];
 
-  return coordinates ?? null;
+  // A copy: the map's own is every game's.
+  return coordinates === undefined ? null : { ...coordinates };
 };
 
 /** Every start on `map`, whoever's. */
 export const startTilesOn = (map: EarthMap): Coordinates[] =>
-  map.startTiles.map(([, coordinates]) => coordinates);
+  map.startTiles.map(([, coordinates]) => ({ ...coordinates }));
 
 export default startTileOn;

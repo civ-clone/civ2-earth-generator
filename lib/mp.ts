@@ -6,7 +6,7 @@
 //    and two numbers the game works out for itself;
 //  - 21 start positions, one per tribe in the order of `RULES.TXT` `@LEADERS`: the 21 x (doubled), then the 21 y, -1
 //    where a tribe has none;
-//  - 6 bytes per square, row by row. The game keeps only the first when it loads a map, and clears the rest: its low 4
+//  - 6 bytes per square, row by row. The game keeps only the first when it loads a map, and resets the rest: its low 4
 //    bits are the terrain (0 Desert … 10 Ocean), 0x80 a river and 0x40 no special resource.
 //
 // A square at doubled x `X` and row `y` is `X / 2` (rounded down) across on the staggered isometric grid, whose odd
