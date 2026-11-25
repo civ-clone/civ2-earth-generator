@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.tribes = exports.startTilesOn = exports.startTileOn = exports.toDoubled = exports.terrainLetters = exports.squares = exports.playedSquares = exports.fromDoubled = exports.getEarthMap = exports.findEarthMap = exports.earthMaps = exports.terrainTypes = exports.Earth = void 0;
+exports.tribes = exports.startTilesOn = exports.startTileOn = exports.toDoubled = exports.terrainLetters = exports.squares = exports.playedSquares = exports.fromDoubled = exports.getEarthMap = exports.findEarthMap = exports.earthMaps = exports.terrainTypes = exports.earthGeneratorId = exports.Earth = void 0;
 var Earth_1 = require("./Earth");
 Object.defineProperty(exports, "Earth", { enumerable: true, get: function () { return Earth_1.Earth; } });
+Object.defineProperty(exports, "earthGeneratorId", { enumerable: true, get: function () { return Earth_1.earthGeneratorId; } });
 Object.defineProperty(exports, "terrainTypes", { enumerable: true, get: function () { return Earth_1.terrainTypes; } });
 var EarthMaps_1 = require("./EarthMaps");
 Object.defineProperty(exports, "earthMaps", { enumerable: true, get: function () { return EarthMaps_1.earthMaps; } });

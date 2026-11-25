@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Earth = exports.terrainTypes = void 0;
+exports.Earth = exports.earthGeneratorId = exports.terrainTypes = void 0;
 const Desert_1 = require("@civ-clone/base-terrain-desert/Desert");
 const EarthMap_1 = require("./EarthMap");
 const Forest_1 = require("@civ-clone/base-terrain-forest/Forest");
@@ -30,6 +30,11 @@ exports.terrainTypes = [
     Ocean_1.Ocean,
 ];
 /**
+ * What `Earth#id()` says, and so what a world made from it records (`World#generatorId()`): how a rule tells a game on
+ *  the Earth, before or after a load.
+ */
+exports.earthGeneratorId = 'earth';
+/**
  * Civilization II's Earth, on the staggered isometric grid, in each size `earthMaps` has, with its polar rows Glacier
  *  (`playedSquares`). A size without a map of its own gets the Normal map, 50 × 80, so `width()` and `height()` report
  *  the size actually generated. The rivers, the map's seed and where each civilization starts are the map's (`map()`),
@@ -45,6 +50,9 @@ class Earth extends Generator_1.default {
             topologyId: 'staggered-iso',
         });
         this._map = map;
+    }
+    id() {
+        return exports.earthGeneratorId;
     }
     async generate() {
         return (0, EarthMap_1.playedSquares)(this._map).map(({ letter }) => new exports.terrainTypes[EarthMap_1.terrainLetters.indexOf(letter)]());

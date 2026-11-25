@@ -8,7 +8,8 @@ import EarthMap, {
 import { earthMaps, findEarthMap, getEarthMap } from '../EarthMaps';
 import { startTileOn, startTilesOn } from '../startTiles';
 import Civilization from '@civ-clone/core-civilization/Civilization';
-import Earth from '../Earth';
+import Earth, { earthGeneratorId } from '../Earth';
+import World from '@civ-clone/core-world/World';
 import { Glacier } from '@civ-clone/base-terrain-glacier/Glacier';
 import SquareTopology from '@civ-clone/core-world/SquareTopology';
 import { Roman } from '@civ-clone/base-civilization-roman/Roman';
@@ -68,6 +69,14 @@ describe('Earth maps', (): void => {
         expect(at(map, x, y).letter).not.equal('O');
       });
     });
+  });
+});
+
+describe('Earth#id', (): void => {
+  it("says it's the Earth, as civ1-earth-generator's does, for the world made from it to record", (): void => {
+    expect(new Earth().id()).equal(earthGeneratorId);
+    expect(earthGeneratorId).equal('earth');
+    expect(new World(new Earth()).generatorId()).equal('earth');
   });
 });
 
@@ -244,6 +253,7 @@ describe('index', (): void => {
     expect(exported).eql(
       [
         'Earth',
+        'earthGeneratorId',
         'earthMaps',
         'findEarthMap',
         'fromDoubled',

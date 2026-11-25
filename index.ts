@@ -1,4 +1,4 @@
-export { Earth, terrainTypes } from './Earth';
+export { Earth, earthGeneratorId, terrainTypes } from './Earth';
 export { earthMaps, findEarthMap, getEarthMap } from './EarthMaps';
 export {
   fromDoubled,
