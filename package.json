@@ -1,6 +1,6 @@
 {
   "name": "@civ-clone/civ2-earth-generator",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "index.js",
   "description": "Civilization II's own Earth, as a world Generator, in its three sizes: the terrain, rivers, map seed and start positions derived from the original's .MP files, on the staggered isometric grid.",
   "repository": "git@github.com:civ-clone/civ2-earth-generator.git",
